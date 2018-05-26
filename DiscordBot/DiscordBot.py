@@ -1,7 +1,9 @@
 import discord
 import asyncio
+
 blockKane=False
 blockNut=False
+
 class idfnd:
     szefo="<@243142446274445322>"
     v7="<@280843168231063552>"
@@ -9,8 +11,6 @@ class idfnd:
     adwo="<@372478034147803158>"
 class chnnl:
     owo="441604832588070933"
-
-
 
 def load_db():
     db_file = open("database2.txt")
@@ -44,7 +44,7 @@ def load_db():
 
 
 client = discord.Client()
-blockKane=False
+
 @client.event
 async def on_message(message):
     global blockKane
@@ -56,6 +56,7 @@ async def on_message(message):
     if message.content.startswith('hello V'):
         msg = 'Witaj {0.author.mention} ^^'.format(message)
         await client.send_message(message.channel, msg)
+    
     if message.content.startswith('bloknij kane'):
         msg = 'Oczywiście {0.author.mention}!'.format(message)
         blockKane=True
@@ -81,6 +82,13 @@ async def on_message(message):
     if message.content.startswith('adwo chcesz bota?'):
         msg = 'Nie oddawaj mje dla %s!'.format(message)
         await client.send_message(message.channel, msg % idfnd.adwo)
+    if message.content.startswith('GetOutV'):
+        msg = ':sob:'.format(message)
+        await client.send_message(message.channel, msg)
+        quit()
+    if message.content.startswith('V napisz'):
+        msg = 'no siema mordo'.format(message)
+        await client.send_message(message.author, msg)
     if blockKane:
         if clt == "kane#0214":
             await client.delete_message(message)
@@ -101,6 +109,8 @@ async def on_ready():
     print(client.user.name)
     print(client.user.id)
     print('------')
+    await client.send_message(discord.Object(id=chnnl.owo),'żyje!')
+        
     await client.change_status(discord.Game(name="VVVVVVVVVVVVVVVVVVVVVVVVVVVV"))
 
 async def my_background_task():
