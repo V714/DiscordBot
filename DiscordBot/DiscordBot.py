@@ -1,6 +1,7 @@
 import discord
 import asyncio
 blockKane=False
+blockNut=False
 class idfnd:
     szefo="<@243142446274445322>"
     v7="<@280843168231063552>"
@@ -47,6 +48,7 @@ blockKane=False
 @client.event
 async def on_message(message):
     global blockKane
+    global blockNut
     clt = str(message.author)
     # we do not want the bot to reply to itself
     if message.author == client.user:
@@ -62,6 +64,14 @@ async def on_message(message):
         msg = 'No ok {0.author.mention}!'.format(message)
         blockKane=False
         await client.send_message(message.channel, msg)
+    if message.content.startswith('bloknij paffła'):
+        msg = 'Pawełek...przykro mi...'.format(message)
+        blockNut=True
+        await client.send_message(message.channel, msg)
+    if message.content.startswith('uwolnij paffła!'):
+        msg = 'Pawełek jesteś wolny!'.format(message)
+        blockNut=False
+        await client.send_message(message.channel, msg)
     if message.content.startswith('szefo where are you'):
         msg = '%s hunt'.format(message)
         await client.send_message(message.channel, msg % idfnd.szefo)
@@ -73,6 +83,9 @@ async def on_message(message):
         await client.send_message(message.channel, msg % idfnd.adwo)
     if blockKane:
         if clt == "kane#0214":
+            await client.delete_message(message)
+    if blockNut:
+        if clt == "Nutplace#0933":
             await client.delete_message(message)
     if message.content.startswith('v!list'):
         msg2=load_db()+"\n For {0.author.mention} :heart:!"
