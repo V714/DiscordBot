@@ -1,4 +1,5 @@
 import discord
+import asyncio
 
 class idfnd:
     szefo="<@243142446274445322>"
@@ -42,8 +43,9 @@ async def on_ready():
     print(client.user.name)
     print(client.user.id)
     print('------')
-    await client.send_message(discord.Object(id=chnnl.owo),'owo hunt')
-
+    while(True):
+        await client.send_message(discord.Object(id=chnnl.owo),'owo hunt')
+        await asyncio.sleep(10)
 filetoken=open("tkn.txt")
 token = filetoken.read()
 filetoken.close()
