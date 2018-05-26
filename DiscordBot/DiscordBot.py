@@ -1,13 +1,15 @@
 import discord
 
-
 class idfnd:
     szefo="<@243142446274445322>"
     v7="<@280843168231063552>"
     nox="<@294905774767865857>"
+class chnnl:
+    owo="441604832588070933"
 
 
 client = discord.Client()
+
 
 @client.event
 async def on_message(message):
@@ -29,6 +31,10 @@ async def on_message(message):
 
     #if clt == "kane#0214":
     #    await client.delete_message(message)
+
+
+
+
        
 @client.event
 async def on_ready():
@@ -36,6 +42,8 @@ async def on_ready():
     print(client.user.name)
     print(client.user.id)
     print('------')
+    await client.send_message(discord.Object(id=chnnl.owo),'owo hunt')
+
 filetoken=open("tkn.txt")
 token = filetoken.read()
 filetoken.close()
