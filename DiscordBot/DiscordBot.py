@@ -26,6 +26,10 @@ def answer(message):
         a = message.content 
         if a.startswith("hello V"):
             return 'Witaj {0.author.mention} ^^'.format(message)
+        if a.startswith("dobranoc V"):
+            return 'Dobrej nocy {0.author.mention}! :heart:'.format(message)
+        if a.startswith("V nie ładnie, pożegnaj się"):
+            return 'Dobranoc! ^^'
         if a.startswith('szefo where are you'):
             return '%s hunt' % (idfnd.szefo)
         if a.startswith("lumos"):
@@ -41,6 +45,17 @@ def answer(message):
     
 
 client = discord.Client()
+
+# while loop
+async def alive():
+    await client.wait_until_ready()
+    global counter
+    # Spamming command to one of my channels...he just saying he is alive.
+    while not client.is_closed:
+        await client.send_message(discord.Object(id=chnnl.owo),'żyje od {}min! :3'.format(str(counter)))
+        await asyncio.sleep(60)
+        counter += 1
+
 
 @client.event
 async def on_message(message):
@@ -60,10 +75,9 @@ async def on_message(message):
     if message.content.startswith("uwolnij paffła!"):
         blockNut=False
         nutCounter=0
-        client.send_message(message.channel,'Pawełek jesteś wolny!')
+        await client.send_message(message.channel,'Pawełek jesteś wolny!')
     if blockNut:
-        #if clt == "Nutplace#0933":
-        if clt == "V7#8999":
+        if clt == "Nutplace#0933":
             await client.delete_message(message)
             em = discord.Embed(title="Pawełek punched %d times!" % nutCounter, colour=0xFF0000)
             await client.edit_message(nutMsg, embed=em)
@@ -82,15 +96,8 @@ async def on_message(message):
 
         message = await client.wait_for_message(author=message.author, check=check)
         name = message.content[len('v!'):].strip()
-        await client.send_message(message.channel, '{} jest fajny!'.format(name))
+        await client.send_message(message.channel, '{} jest fajny(a)!'.format(name))
     answer(message.content)
-   
-
-    
-    
-
-
-    
 
 
 
@@ -101,20 +108,11 @@ async def on_ready():
     print(client.user.name)
     print(client.user.id)
     print('------')
-    await client.send_message(discord.Object(id=chnnl.owo),'żyje!')
     # Changing status    
     await client.change_status(discord.Game(name="VVVVVVVVVVVVVVVVVVVVVVVVVVVV"))
 
-# Some kind of while loop I guess
-async def my_background_task():
-    await client.wait_until_ready()
-    global counter
-    # Spamming command to one of my channels...he just saying he is alive.
-    while not client.is_closed:
-        counter += 1
-        await client.send_message(discord.Object(id=chnnl.owo),'żyje od {}min! :3'.format(str(counter)))
-        await asyncio.sleep(60)
 
+client.loop.create_task(alive())
 # Taking Secret Token from Secret file :3
 filetoken=open("tkn.txt")
 token = filetoken.read()
