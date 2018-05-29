@@ -1,6 +1,8 @@
 import discord
 import asyncio
 from sqlf import load_db
+from sqlf import add_db
+from sqlf import load_sp
 
 #...just don't ask
 blockNut=False
@@ -35,10 +37,15 @@ def answer(message):
         if a.startswith("lumos"):
             return '%s' % (idfnd.nox)
 
+        ### Taking list of users from database
         if message.content.startswith('v!list'):
             msg2=load_db()+"\n For {0.author.mention} :heart:!"
             return msg2.format(message)
-
+        ### Taking info of only one user by nickname
+        if message.content.startswith('v!get'):
+            name = message.content[len('v!get'):].strip()
+            msg2=load_sp(name).format(message)
+            return msg2
     except AttributeError:
         pass
     
@@ -59,14 +66,16 @@ async def alive():
 
 @client.event
 async def on_message(message):
-
     global nutMsg
     global nutCounter
     global blockNut
 
+    # To prevent bot loop - responding to himself
     if message.author == client.user:
         return
     
+    print('[%s]: ' % message.author+message.content)
+    ### Getting author name
     clt = str(message.author)
 
     if message.content.startswith("bloknij paffła"):
@@ -78,15 +87,22 @@ async def on_message(message):
         await client.send_message(message.channel,'Pawełek jesteś wolny!')
     if blockNut:
         if clt == "Nutplace#0933":
+            nutCounter+=1
             await client.delete_message(message)
             em = discord.Embed(title="Pawełek punched %d times!" % nutCounter, colour=0xFF0000)
             await client.edit_message(nutMsg, embed=em)
-            nutCounter+=1
+    ####################################################################
+    ###
+    ### Testing private message sending
+
     if message.content and answer(message):
         await client.send_message(message.channel,answer(message))
     if message.content.startswith('V napisz'):
         msg = 'no siema mordo'.format(message)
         await client.send_message(message.author, msg)
+    ####################################################################
+    ###
+    ### Testing answer containing user message
 
     if message.content.startswith('fajnie'):
         await client.send_message(message.channel, 'Kto jest fajny? Napisz v! -imie-')
@@ -98,7 +114,21 @@ async def on_message(message):
         name = message.content[len('v!'):].strip()
         await client.send_message(message.channel, '{} jest fajny(a)!'.format(name))
     answer(message.content)
+    ####################################################################
+    ###
+    ### Adding new person to database
+    if message.content.startswith('v!add.list'):
+        await client.send_message(message.channel, 'Wpisz: v! -nick- -wiek- -imie-')
 
+        def check(msg):
+            return msg.content.startswith('v!')
+
+        message = await client.wait_for_message(author=message.author, check=check)
+        data = message.content[len('v!'):].strip()
+        data = data.split()
+        add_db(data[0],int(data[1]),data[2])
+        await client.send_message(message.channel, "{0.author.mention} dodał(a) właśnie użytkownika %s do listy! :sunglasses:".format(message) % data[0])
+    answer(message.content)
 
 
 # I guess this function runs just once
