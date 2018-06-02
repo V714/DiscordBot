@@ -1,5 +1,7 @@
-import discord
+﻿import discord
 import asyncio
+import vninegag
+#import pyninegag
 from sqlf import load_db
 from sqlf import add_db
 from sqlf import load_sp
@@ -26,11 +28,11 @@ def answer(message):
 # There is the problem with 'content' attribute so I had to do exception
     try:
         a = message.content 
-        if a.startswith("hello V"):
+        if a.startswith("hello v"):
             return 'Witaj {0.author.mention} ^^'.format(message)
-        if a.startswith("dobranoc V"):
+        if a.startswith("dobranoc v"):
             return 'Dobrej nocy {0.author.mention}! :heart:'.format(message)
-        if a.startswith("V nie ładnie, pożegnaj się"):
+        if a.startswith("v nie ładnie, pożegnaj się"):
             return 'Dobranoc! ^^'
         if a.startswith('szefo where are you'):
             return '%s hunt' % (idfnd.szefo)
@@ -46,6 +48,13 @@ def answer(message):
             name = message.content[len('v!get'):].strip()
             msg2=load_sp(name).format(message)
             return msg2
+        ### Taking new 9gag article
+        if message.content.startswith('v!9gag'):
+            gag =vninegag.getGag()
+            title = vninegag.getTitle(gag)
+            link = vninegag.getLink(gag)
+            msg=title+"\n\n"+link
+            return msg
     except AttributeError:
         pass
     
@@ -54,18 +63,19 @@ def answer(message):
 client = discord.Client()
 
 # while loop
-async def alive():
-    await client.wait_until_ready()
-    global counter
-    # Spamming command to one of my channels...he just saying he is alive.
-    while not client.is_closed:
-        await client.send_message(discord.Object(id=chnnl.owo),'żyje od {}min! :3'.format(str(counter)))
-        await asyncio.sleep(60)
-        counter += 1
+#async def alive():
+#    await client.wait_until_ready()
+#    global counter
+#    # Spamming command to one of my channels...he just saying he is alive.
+#    while not client.is_closed:
+#        await client.send_message(discord.Object(id=chnnl.owo),'żyje od {}min! :3'.format(str(counter)))
+#        await asyncio.sleep(60)
+#        counter += 1
 
 
 @client.event
 async def on_message(message):
+    message.content = message.content.lower()
     global nutMsg
     global nutCounter
     global blockNut
@@ -97,7 +107,7 @@ async def on_message(message):
 
     if message.content and answer(message):
         await client.send_message(message.channel,answer(message))
-    if message.content.startswith('V napisz'):
+    if message.content.startswith('v napisz'):
         msg = 'no siema mordo'.format(message)
         await client.send_message(message.author, msg)
     ####################################################################
@@ -142,7 +152,7 @@ async def on_ready():
     await client.change_status(discord.Game(name="VVVVVVVVVVVVVVVVVVVVVVVVVVVV"))
 
 
-client.loop.create_task(alive())
+######### client.loop.create_task(alive())
 # Taking Secret Token from Secret file :3
 filetoken=open("tkn.txt")
 token = filetoken.read()
