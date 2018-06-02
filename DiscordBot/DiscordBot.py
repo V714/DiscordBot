@@ -30,12 +30,16 @@ def answer(message):
         a = message.content 
         if a.startswith("hello v"):
             return 'Witaj {0.author.mention} ^^'.format(message)
+        if a.startswith("jem"):
+            return 'Smacznego {0.author.mention} :3'.format(message)
         if a.startswith("dobranoc v"):
             return 'Dobrej nocy {0.author.mention}! :heart:'.format(message)
         if a.startswith("v nie ładnie, pożegnaj się"):
             return 'Dobranoc! ^^'
         if a.startswith('szefo where are you'):
             return '%s hunt' % (idfnd.szefo)
+        if 'nie spodziewa' in a:
+            return 'https://i.ytimg.com/vi/zLj-EAgfFsg/hqdefault.jpg'
         if a.startswith("lumos"):
             return '%s' % (idfnd.nox)
 
