@@ -7,24 +7,24 @@ from sqlf import add_db
 from sqlf import load_sp
 
 #...just don't ask
-blockNut=False
-nutCounter=0
+block_nut=False
+nut_counter=0
 #counter of how much minutes bot is online
 counter=0
 
 #Friends IDs
-class idfnd:
-    szefo="<@243142446274445322>"
-    v7="<@280843168231063552>"
-    nox="<@294905774767865857>"
-    adwo="<@372478034147803158>"
-
+idfnd = {
+   'szefo':"<@243142446274445322>",
+    'v7':"<@280843168231063552>",
+    'nox':"<@294905774767865857>",
+    'adwo':"<@372478034147803158>",
+    }
 #My channels IDs
-class chnnl:
-    owo="441604832588070933"
-
+chnl = {
+    'owo':"441604832588070933"
+    }
 def answer(message):
-
+ 
 # There is the problem with 'content' attribute so I had to do exception
     try:
         a = message.content 
@@ -37,11 +37,13 @@ def answer(message):
         if a.startswith("v nie ładnie, pożegnaj się"):
             return 'Dobranoc! ^^'
         if a.startswith('szefo where are you'):
-            return '%s hunt' % (idfnd.szefo)
+            return '%s hunt' % (idfnd['szefo'])
         if 'nie spodziewa' in a:
             return 'https://i.ytimg.com/vi/zLj-EAgfFsg/hqdefault.jpg'
         if a.startswith("lumos"):
-            return '%s' % (idfnd.nox)
+            return '%s' % (idfnd['nox'])
+        if a.startswith("vvvvvvv"):
+            return '%s' % (idfnd['v7'])
 
         ### Taking list of users from database
         if message.content.startswith('v!list'):
@@ -54,10 +56,10 @@ def answer(message):
             return msg2
         ### Taking new 9gag article
         if message.content.startswith('v!9gag'):
-            gag =vninegag.getGag()
-            title = vninegag.getTitle(gag)
-            link = vninegag.getLink(gag)
-            msg=title+"\n\n"+link
+            gag =vninegag.get_gag()
+            title = vninegag.get_title(gag)
+            url = vninegag.get_url(gag)
+            msg=title+"\n\n"+url
             return msg
     except AttributeError:
         pass
@@ -72,7 +74,7 @@ client = discord.Client()
 #    global counter
 #    # Spamming command to one of my channels...he just saying he is alive.
 #    while not client.is_closed:
-#        await client.send_message(discord.Object(id=chnnl.owo),'żyje od {}min! :3'.format(str(counter)))
+#        await client.send_message(discord.Object(id=chnnl['owo']),'żyje od {}min! :3'.format(str(counter)))
 #        await asyncio.sleep(60)
 #        counter += 1
 
@@ -80,9 +82,9 @@ client = discord.Client()
 @client.event
 async def on_message(message):
     message.content = message.content.lower()
-    global nutMsg
-    global nutCounter
-    global blockNut
+    global nut_msg
+    global nut_counter
+    global block_nut
 
     # To prevent bot loop - responding to himself
     if message.author == client.user:
@@ -92,19 +94,21 @@ async def on_message(message):
     ### Getting author name
     clt = str(message.author)
 
+
+    ### Blocking friend (just deleting his messages when he send)
     if message.content.startswith("bloknij paffła"):
-        blockNut=True
-        nutMsg = await client.send_message(message.channel, 'Pawełek...przykro mi...')
+        block_nut=True
+        nut_msg = await client.send_message(message.channel, 'Pawełek...przykro mi...')
     if message.content.startswith("uwolnij paffła!"):
-        blockNut=False
-        nutCounter=0
+        block_nut=False
+        nut_counter=0
         await client.send_message(message.channel,'Pawełek jesteś wolny!')
-    if blockNut:
+    if block_nut:
         if clt == "Nutplace#0933":
-            nutCounter+=1
+            nut_counter+=1
             await client.delete_message(message)
-            em = discord.Embed(title="Pawełek punched %d times!" % nutCounter, colour=0xFF0000)
-            await client.edit_message(nutMsg, embed=em)
+            em = discord.Embed(title="Pawełek punched %d times!" % nut_counter, colour=0xFF0000)
+            await client.edit_message(nut_msg, embed=em)
     ####################################################################
     ###
     ### Testing private message sending
