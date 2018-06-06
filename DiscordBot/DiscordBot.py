@@ -15,8 +15,8 @@ counter=0
 #Friends IDs
 idfnd = {
    'szefo':"<@243142446274445322>",
-    'v7':"<@280843168231063552>",
-    'nox':"<@294905774767865857>",
+    'v7' : "<@280843168231063552>",
+    'nox': "<@294905774767865857>",
     'adwo':"<@372478034147803158>",
     }
 #My channels IDs
@@ -81,6 +81,7 @@ client = discord.Client()
 
 @client.event
 async def on_message(message):
+    upper_msg = message.content
     message.content = message.content.lower()
     global nut_msg
     global nut_counter
@@ -118,6 +119,23 @@ async def on_message(message):
     if message.content.startswith('v napisz'):
         msg = 'no siema mordo'.format(message)
         await client.send_message(message.author, msg)
+
+
+    ####################################################################
+    ###
+    ### Bot can send private msg to anyone from servers he is on
+   
+    if message.content.startswith('v! <@'):
+        pmauthor = message.content[len('v!'):].strip()
+        pmauthor = pmauthor.split()
+        msg = upper_msg.replace('v! '+pmauthor[0],"")
+        if pmauthor[0][2:-1].startswith("!"):
+            send_to = await client.get_user_info(pmauthor[0][3:-1])
+        else:
+            send_to = await client.get_user_info(pmauthor[0][2:-1])
+
+        embed = discord.Embed(title="from %s :wink:" % message.author,description=msg,color=0x0000ff)
+        await client.send_message(send_to,embed=embed)
     ####################################################################
     ###
     ### Testing answer containing user message
