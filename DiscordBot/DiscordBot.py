@@ -1,7 +1,6 @@
 ﻿import discord
 import asyncio
 import vninegag
-#import pyninegag
 from sqlf import load_db
 from sqlf import add_db
 from sqlf import load_sp
